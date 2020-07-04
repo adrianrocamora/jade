@@ -14,7 +14,7 @@ public class WorldManager : MonoBehaviour
     public BuildManager buildManager;
 
     int epoch;
-    int money;
+    float[] historyMoney = new float[20];
     float[] historyC02 = new float [20];
     float[] historyNuclear = new float[20];
     float[] historyPower = new float[20];
@@ -45,8 +45,10 @@ public class WorldManager : MonoBehaviour
         historyPower[epoch] = 0;
         historyNuclear[epoch] = 0;
         historyC02[epoch] = 0;
+        historyMoney[epoch] = 0;
         historyPopulation[epoch] = GetPopulation();
         InvokeRepeating("UpdateEveryMinute", 0, 60);
+        // InvokeRepeating("UpdateEveryMinute", 0, 60);
     }
 
     void AddHexTile(GameObject tile, int i)
@@ -126,15 +128,18 @@ public class WorldManager : MonoBehaviour
         disasters.UpdateNuclear(historyNuclear);
         disasters.UpdatePower(historyPower);
         disasters.UpdateWellness(historyWellness);
-        buildManager.UpdateEpoch(epoch);
         */
+        buildManager.UpdateEpoch(epoch);
 
     }
 
     private void UpdateMoney()
     {
         // throw new NotImplementedException();
-        GetPopulation();
+        float wellness = historyWellness[epoch];
+        float prevMoney = historyMoney[epoch-1];
+        float currentMoney = GetPopulation() + prevMoney;
+        historyMoney[epoch] = currentMoney;
     }
 
     // wellnes [0-100]
@@ -164,7 +169,8 @@ public class WorldManager : MonoBehaviour
     }
     int GetPopulation()
     {                     //  1870,    1900, 2,3,
-        int[] population = new int[16] { 1440, 1500, 1570, 1650, 1800,  
+        int[] population = new int[16] { 
+            1440, 1500, 1570, 1650, 1800,  
             1950, 2100, 2400, 2700, 3000,
             3650, 4400, 5250, 6000, 7000, 7800 };//[990,  1650];
         return 0;

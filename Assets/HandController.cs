@@ -59,9 +59,11 @@ public class HandController : MonoBehaviour
     {
         Debug.Log("Coll exit trigger" + other.gameObject.name);
 
-      // if(other.gameObject.GetComponent<BuildButton>()!=null) selectedBuildButton= null;
-       // else other.gameObject.GetComponent<HexTile>().TriggerExit(other.gameObject);
-        // other.gameObject.GetComponent<Renderer>().material = world.waterMat;
+        if(other.gameObject.GetComponent<BuildButton>()!=null) 
+            selectedBuildButton= null;
+        else 
+            other.gameObject.GetComponent<HexTile>().TriggerExit(other.gameObject);
+       // other.gameObject.GetComponent<Renderer>().material = world.waterMat;
 
     }
     /*

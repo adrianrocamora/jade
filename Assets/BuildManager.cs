@@ -49,9 +49,9 @@ public class BuildManager : MonoBehaviour
         nuclear2A.SetActive(true);
         nuclearA.transform.transform.SetParent(spawnPoint.transform, false);
         nuclear2A.transform.transform.SetParent(spawnPoint.transform, false);
-        BoxCollider c = nuclearA.AddComponent<BoxCollider>();
+        BoxCollider c = nuclear2A.AddComponent<BoxCollider>();
         c.isTrigger = true;
-        BuildButton b = nuclearA.AddComponent<BuildButton>();
+        BuildButton b = nuclear2A.AddComponent<BuildButton>();
         buildButtons[index++] = b;
         nuclearA.GetComponent<Renderer>().material = m;
         b.Init(tile.GetPrice(), tile.GetUnlockEpoch(), tile, selectedMat, m, nuclear2A, buildInfo, this);
@@ -62,6 +62,7 @@ public class BuildManager : MonoBehaviour
 
     public void UpdateEpoch(int e)
     {
+        UnityEngine.Debug.Log("Update epoch! " + e);
         for (int i = 0; i < buildButtons.Length; i++)
         {
             buildButtons[i].UpdateEpoch(e);

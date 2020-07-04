@@ -41,7 +41,7 @@ public class HexTile : MonoBehaviour
     virtual public void TriggerExit(GameObject tile)
     {
         tile.GetComponent<Renderer>().material = mat;
-
+        Debug.Log("TriggerExit");
     }
     virtual public void TriggerEnter(GameObject tile, BuildButton selectedBuildButton)
     {
@@ -49,7 +49,7 @@ public class HexTile : MonoBehaviour
         tile.GetComponent<Renderer>().material = TileManager.Get().selectMat;
         // NuclearAHexTile.AddTile(tile);
         if(selectedBuildButton!=null)
-        selectedBuildButton.nextTile.AddTileLocal(tile);
+            selectedBuildButton.nextTile.AddTileLocal(tile);
     }
 }
 
@@ -105,10 +105,15 @@ public class HouseAHexTile : HexTile
         o.SetActive(true);
         o.transform.transform.SetParent(tile.transform, true);
     }
+
+    public override float GetUnlockEpoch()
+    {
+        return 4;
+    }
 }
 
     // all units are in killowats
-    public class NuclearAHexTile : HexTile
+public class NuclearAHexTile : HexTile
 {
     bool firstTime = true;
 
@@ -129,13 +134,16 @@ public class HouseAHexTile : HexTile
         o.SetActive(true);
         o.transform.transform.SetParent(tile.transform, true);
         o.transform.localScale *= 0.015f;
-
     }
     public override GameObject Get3dObject() {
         Debug.Log("Going nuckearA " );
         return TileManager.Get().nuclearA;
     }
 
+    public override float GetUnlockEpoch()
+    {
+        return 5;
+    }
     override public float GetC02Polution()
     {
         if(firstTime)
