@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,10 +25,18 @@ public class BuildManager : MonoBehaviour
 
     public GameObject buildInfo;
     int index;
-
+    public InfoController info;
+    public BuildButton selectedBuildButton;
+    static BuildManager s_buildManager;
+    public static BuildManager Get()
+    {
+        return s_buildManager;
+    }
     // Start is called before the first frame update
     void Start()
     {
+        s_buildManager = this;
+        selectedBuildButton = null;
         buildButtons = new BuildButton[9];index = 0;
         buildInfo.SetActive(false);
         CreateButton(-0.3f, -0.3f, nuclearAMat, new NuclearAHexTile());
@@ -54,10 +63,16 @@ public class BuildManager : MonoBehaviour
         BuildButton b = nuclear2A.AddComponent<BuildButton>();
         buildButtons[index++] = b;
         nuclearA.GetComponent<Renderer>().material = m;
-        b.Init(tile.GetPrice(), tile.GetUnlockEpoch(), tile, selectedMat, m, nuclear2A, buildInfo, this);
-        Debug.Log("jiji");
+        b.Init(tile.GetPrice(), tile.GetUnlockEpoch(), tile, selectedMat, m, nuclear2A);
         b.SetLock(true);
+
         // nuclearA.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+    }
+
+    public void ShowBuildInfo(string name, string description)
+    {
+        buildInfo.SetActive(true);
+        info.UpdatePanel(name, description);
     }
 
     public void UpdateEpoch(int e)

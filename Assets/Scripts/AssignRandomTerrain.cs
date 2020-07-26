@@ -24,6 +24,7 @@ public class AssignRandomTerrain
     // Start is called before the first frame update
     public int[] GetTerrainArray()
     {
+        //
         int maxTiles = 202;
         //int maxTiles = 160;
         // Terrain    %    tiles      id

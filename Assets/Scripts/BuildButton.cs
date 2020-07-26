@@ -8,8 +8,8 @@ public class BuildButton : MonoBehaviour
     float unlockEpoch;
     Material selectedMat;
     Material iconMat;
-    public GameObject buildInfo;
-    BuildManager buildManager;
+    // public GameObject buildInfo;
+    //BuildManager buildManager;
     bool isSelected;
     /*
     float power;
@@ -17,20 +17,26 @@ public class BuildButton : MonoBehaviour
     float NuclearWaste;
     */
     public HexTile nextTile;
+    // private HexTile hexTile;
     bool isLocked;
     GameObject lockGameObj;
 
-    public void Init(float price, float unlockEpoch, HexTile nextTile, Material selectedMat, Material iconMat, GameObject lockGameObj, GameObject buildInfo, BuildManager b)
+    public void Init(float price, float unlockEpoch, HexTile nextTile, 
+        Material selectedMat, 
+        Material iconMat, GameObject lockGameObj)
+        //, BuildManager b)
     {
         this.price = price;
         this.unlockEpoch = unlockEpoch;
-        this.nextTile = nextTile;
+        this.nextTile = nextTile;//.Copy();
+        //hexTile = nextTile.Copy();
         this.iconMat = iconMat;
         this.selectedMat = selectedMat;
         this.lockGameObj = lockGameObj;
         lockGameObj.GetComponent<Renderer>().material = iconMat;
-        buildManager = b;
+        // buildManager = b;
         isSelected = false;
+        Debug.Log("jiji nextTile" + nextTile);
     }
 
     public void SetLock(bool l)
@@ -40,23 +46,38 @@ public class BuildButton : MonoBehaviour
     }
     public void SetSelected(bool b)
     {
+        BuildManager buildManager = BuildManager.Get();
         // unselect all,
         // select this one
         Debug.Log("SetSelected " + b + isSelected);
         if (b && !isSelected)
         {
             buildManager.UnselectAll();
-            gameObject.GetComponent<Renderer>().material = selectedMat;
-            isSelected = true;
+            OnButtonSelected();
         }
         else
         {
             gameObject.GetComponent<Renderer>().material = iconMat;
             isSelected = false;
+            buildManager.selectedBuildButton = null;
 
+            buildManager.buildInfo.SetActive(false);
+
+            
+            
         }
     }
+    void OnButtonSelected()
+    {
+        BuildManager buildManager = BuildManager.Get();
 
+        gameObject.GetComponent<Renderer>().material = selectedMat;
+        isSelected = true;
+        buildManager.selectedBuildButton = this;
+        // nextTile.name, nextTile.description
+        Debug.Log(this.price);
+        buildManager.ShowBuildInfo(nextTile.tittle, "jojo");
+    }
     public void UpdateEpoch(int e)
     {
         if (e >= unlockEpoch)
