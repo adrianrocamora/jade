@@ -16,19 +16,19 @@ public class BuildButton : MonoBehaviour
     float C02Waste;
     float NuclearWaste;
     */
-    public HexTile nextTile;
+    public Building building;
     // private HexTile hexTile;
     bool isLocked;
     GameObject lockGameObj;
 
-    public void Init(float price, float unlockEpoch, HexTile nextTile, 
+    public void Init(float price, float unlockEpoch, Building building, 
         Material selectedMat, 
         Material iconMat, GameObject lockGameObj)
         //, BuildManager b)
     {
         this.price = price;
         this.unlockEpoch = unlockEpoch;
-        this.nextTile = nextTile;//.Copy();
+        this.building = building;//.Copy();
         //hexTile = nextTile.Copy();
         this.iconMat = iconMat;
         this.selectedMat = selectedMat;
@@ -36,7 +36,7 @@ public class BuildButton : MonoBehaviour
         lockGameObj.GetComponent<Renderer>().material = iconMat;
         // buildManager = b;
         isSelected = false;
-        Debug.Log("jiji nextTile" + nextTile);
+        Debug.Log("jiji nextTile" + building);
     }
 
     public void SetLock(bool l)
@@ -59,12 +59,7 @@ public class BuildButton : MonoBehaviour
         {
             gameObject.GetComponent<Renderer>().material = iconMat;
             isSelected = false;
-            buildManager.selectedBuildButton = null;
-
-            buildManager.buildInfo.SetActive(false);
-
-            
-            
+            buildManager.SetSelectedBuilding(null);
         }
     }
     void OnButtonSelected()
@@ -73,10 +68,11 @@ public class BuildButton : MonoBehaviour
 
         gameObject.GetComponent<Renderer>().material = selectedMat;
         isSelected = true;
-        buildManager.selectedBuildButton = this;
+        buildManager.SetSelectedBuilding(this);
+        Debug.Log(""+building.tittle+"\n"+ building.description+"");
+        buildManager.ShowBuildInfo(building); //building.tittle, building.description);
         // nextTile.name, nextTile.description
         Debug.Log(this.price);
-        buildManager.ShowBuildInfo(nextTile.tittle, "jojo");
     }
     public void UpdateEpoch(int e)
     {

@@ -21,13 +21,13 @@ public class BuildManager : MonoBehaviour
 
     public Material selectedMat;
 
-    public BuildButton[] buildButtons;
-
-    public GameObject buildInfo;
-    int index;
-    public InfoController info;
-    public BuildButton selectedBuildButton;
     static BuildManager s_buildManager;
+    public InfoController info;
+    
+    int index;
+    protected BuildButton selectedBuildButton;
+    protected BuildButton[] buildButtons;
+    protected GameObject buildInfo;
     public static BuildManager Get()
     {
         return s_buildManager;
@@ -37,21 +37,24 @@ public class BuildManager : MonoBehaviour
     {
         s_buildManager = this;
         selectedBuildButton = null;
-        buildButtons = new BuildButton[9];index = 0;
+        buildButtons = new BuildButton[9];
+        index = 0;
+        buildInfo = info.gameObject;
         buildInfo.SetActive(false);
-        CreateButton(-0.3f, -0.3f, nuclearAMat, new NuclearAHexTile());
-        CreateButton(0f, -0.3f, nuclearBMat, new NuclearBHexTile());
-        CreateButton(0.3f, -0.3f, nuclearCMat, new NuclearCHexTile());
+        CreateButton(-0.3f, -0.3f, nuclearAMat, new NuclearA());
+        CreateButton(0f, -0.3f, nuclearBMat, new NuclearB());
+        CreateButton(0.3f, -0.3f, nuclearCMat, new NuclearC());
         // 
-        CreateButton(-0.3f, 0f, renewAMat, new HexTile());
-        CreateButton(0f, 0f, renewBMat, new HexTile());
-        CreateButton(0.3f, 0f, renewCMat, new HexTile());
+        CreateButton(-0.3f, 0f, renewAMat, new RenewA());
+        CreateButton(0f, 0f, renewBMat, new RenewB());
+        CreateButton(0.3f, 0f, renewCMat, new RenewC());
 
-        CreateButton(-0.3f, 0.3f, coalAMat, new NuclearAHexTile());
-        CreateButton(0f, 0.3f, coalBMat, new NuclearBHexTile());
-        CreateButton(0.3f, 0.3f, coalCMat, new NuclearCHexTile());
+        CreateButton(-0.3f, 0.3f, coalAMat, new CoalA());
+        CreateButton(0f, 0.3f, coalBMat, new CoalB());
+        CreateButton(0.3f, 0.3f, coalCMat, new CoalC());
     }
-    void CreateButton(float x, float y, Material m, HexTile tile) { 
+
+    void CreateButton(float x, float y, Material m, Building building) { 
         GameObject nuclearA = Instantiate(menuButton, new Vector3(x, y, -0.5f), Quaternion.EulerRotation(0,0,0));
         GameObject nuclear2A = Instantiate(menuButton, new Vector3(x, y, -0.5f), Quaternion.EulerRotation(0, 0, 0));
         nuclearA.SetActive(true);
@@ -63,16 +66,25 @@ public class BuildManager : MonoBehaviour
         BuildButton b = nuclear2A.AddComponent<BuildButton>();
         buildButtons[index++] = b;
         nuclearA.GetComponent<Renderer>().material = m;
-        b.Init(tile.GetPrice(), tile.GetUnlockEpoch(), tile, selectedMat, m, nuclear2A);
+        b.Init(building.GetPrice(), building.GetUnlockEpoch(), building, selectedMat, m, nuclear2A);
         b.SetLock(true);
 
         // nuclearA.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
     }
+    public BuildButton GetSelectedBuilding()
+    {
+        return selectedBuildButton;
+    }
+    public void SetSelectedBuilding(BuildButton b)
+    {
+        selectedBuildButton = b;
+        buildInfo.SetActive(b != null);
+    }
 
-    public void ShowBuildInfo(string name, string description)
+    public void ShowBuildInfo(Building b) // string name, string description)
     {
         buildInfo.SetActive(true);
-        info.UpdatePanel(name, description);
+        info.UpdatePanel(b);
     }
 
     public void UpdateEpoch(int e)

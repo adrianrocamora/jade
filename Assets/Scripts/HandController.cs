@@ -26,22 +26,24 @@ public class HandController : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
         // other.gameObject.GetComponent<Renderer>().material = world.desertMat;
+        Debug.Log("Coll all ");
 
-        HexTile hexTile = other.gameObject.GetComponent<HexTile>();
+       HexTile hexTile = other.gameObject.GetComponent<HexTile>();
         // BuildButton selectedBuildButton = BuildManager.Get().selectedBuildButton; // other.gameObject.GetComponent<BuildButton>();
         BuildButton selectedBuildButton = other.gameObject.GetComponent<BuildButton>();
         // Debug.Log("BuildBtn " + selectedBuildButton);
         if (hexTile != null)
         {
-            Debug.Log("Coll world " + BuildManager.Get().selectedBuildButton);
-            hexTile.TriggerEnter(other.gameObject, BuildManager.Get().selectedBuildButton);
+            Debug.Log("Coll world " + BuildManager.Get().GetSelectedBuilding());
+            hexTile.TriggerEnter(BuildManager.Get().GetSelectedBuilding());
+            // hexTile.TriggerEnter(other.gameObject, BuildManager.Get().GetSelectedBuilding());
         }
         else if(selectedBuildButton != null)
         {
             selectedBuildButton.SetSelected(true);
             Debug.Log("Coll board " + selectedBuildButton);
-            GameObject o = selectedBuildButton.nextTile.Get3dObject();
-            Debug.Log("Coll board 1 " + o);
+            // GameObject o = selectedBuildButton.nextTile.Get3dObject();
+            // Debug.Log("Coll board 1 " + o);
             /*
             if (o != null)
             {
@@ -54,6 +56,12 @@ public class HandController : MonoBehaviour
 
             }*/
             // show it in the hand
+        }
+        else
+        {
+            Debug.Log("Coll Qui! ");
+
+           Application.Quit();
         }
     }
     
