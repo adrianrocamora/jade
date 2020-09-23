@@ -34,7 +34,7 @@ public class WindowGraph : MonoBehaviour
         //ShowGraph(valueArray, 12);
         //valueArray[0] = 30;
         pressSpaceCount = 7;
-        ShowGraph(valueArray, pressSpaceCount);
+        // ShowGraph(valueArray, pressSpaceCount,0,1);
     }
 
     private GameObject CreateCircle(Vector2 anchoredPosition)
@@ -51,24 +51,31 @@ public class WindowGraph : MonoBehaviour
         return gameObject;
     }
 
-    private void ShowGraph(float[] valueArray, int epoch)
+    public void ShowGraph(float[] valueArray, int epoch, float yMinimum, float yMaximum)
     {
+        Debug.Log(valueArray);
         List<float> valueList = new List<float>();
-        for (int i = 0; i < epoch; ++i)
+        for (int i = 1; i <= epoch; ++i)
         {
             valueList.Add(valueArray[i]);
         }
         //ShowGraph(valueList);
         ShowGraph(
-            valueList, 
+            valueList,
+            yMinimum,
+            yMaximum,
             (int _i) => (1880 + _i*10).ToString(), 
-            (float _f) => Mathf.RoundToInt(_f).ToString());
+            (float _f) => Mathf.RoundToInt(_f).ToString()
+            );
     }
 
     private void ShowGraph(
-        List<float> valueList, 
+        List<float> valueList,
+        float yMinimum,
+        float yMaximum,
         Func<int, string> getAxisLabelX = null, 
-        Func<float, string> getAxisLabelY = null)
+        Func<float, string> getAxisLabelY = null
+        )
     {
         if (getAxisLabelX == null)
         {
@@ -91,21 +98,25 @@ public class WindowGraph : MonoBehaviour
         float graphHeight = graphContainer.sizeDelta.y;
 
         //int maxVisibleValueAmount = 5;
-        float yMaximum = valueList[0];
-        float yMinimum = valueList[0];
-        foreach(float value in valueList)
-        {
-            if (value > yMaximum)
-            {
-                yMaximum = value;
-            }
-            if (value < yMinimum)
-            {
-                yMinimum = value;
-            }
-        }
-        yMaximum = yMaximum + (yMaximum - yMinimum) * 0.2f;
-        yMinimum = yMinimum - (yMaximum - yMinimum) * 0.2f;
+        //float yMaximum = valueList[0];
+        //float yMinimum = valueList[0];
+        //foreach(float value in valueList)
+        //{
+        //    if (value > yMaximum)
+        //    {
+        //        yMaximum = value;
+        //    }
+        //    if (value < yMinimum)
+        //    {
+        //        yMinimum = value;
+        //    }
+        //}
+        //yMaximum = yMaximum + (yMaximum - yMinimum) * 0.2f;
+        //yMinimum = yMinimum - (yMaximum - yMinimum) * 0.2f;
+//        graphHeight
+  //          graphWidth
+        GameObject dotConnectionGameObject2 = CreateDotConnection(new Vector2(0, graphHeight*0.1f), new Vector2(graphWidth, graphHeight * 0.1f), new Color(1f, 1, 0.5f, 0.5f));
+        gameObjectList.Add(dotConnectionGameObject2);
 
         //float xSize = 50f;
         float xSize = graphWidth / (valueList.Count + 1);
@@ -121,7 +132,7 @@ public class WindowGraph : MonoBehaviour
             {
                 GameObject dotConnectionGameObject = CreateDotConnection(
                     lastCircleGameObject.GetComponent<RectTransform>().anchoredPosition, 
-                    circleGameObject.GetComponent<RectTransform>().anchoredPosition);
+                    circleGameObject.GetComponent<RectTransform>().anchoredPosition, new Color(0.2f, 1, 0.5f, 0.5f));
                 gameObjectList.Add(dotConnectionGameObject);
             }
             lastCircleGameObject = circleGameObject;
@@ -180,12 +191,13 @@ public class WindowGraph : MonoBehaviour
         float angle = radians * (180 / (float)Math.PI);
         return angle;
     }
-
-    private GameObject CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB)
+    // Color s_color = new Color(0.2f, 1, 0.5f, 0.5f);
+    private GameObject CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB, Color color)
     {
+        // Color color = in_c!=null? : new Color(1f, 1, 1f, 0.5f);
         GameObject gameObject = new GameObject("dotConnection", typeof(Image));
         gameObject.transform.SetParent(graphContainer, false);
-        gameObject.GetComponent<Image>().color = new Color(0.2f, 1, 0.5f, 0.5f);
+        gameObject.GetComponent<Image>().color = color;
         RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
         Vector2 dir = (dotPositionB - dotPositionA).normalized;
         float distance = Vector2.Distance(dotPositionA, dotPositionB);
@@ -205,12 +217,12 @@ public class WindowGraph : MonoBehaviour
         if (Input.GetKeyDown("space"))
         {
             pressSpaceCount++;
-            ShowGraph(valueArray, pressSpaceCount);
+            ShowGraph(valueArray, pressSpaceCount,0,1);
         }
         if (Input.GetKeyDown("r"))
         {
             pressSpaceCount = 2;
-            ShowGraph(valueArray, pressSpaceCount);
+            ShowGraph(valueArray, pressSpaceCount,0,1);
         }
     }
 }

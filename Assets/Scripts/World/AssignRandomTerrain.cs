@@ -43,7 +43,7 @@ public class AssignRandomTerrain
         int numForest = (int)Math.Round(11 * (double)maxTiles / 100);
         int numLand = (int)Math.Round(10 * (double)maxTiles / 100);
         int numDesert = (int)Math.Round(9 * (double)maxTiles / 100);
-
+        UnityEngine.Debug.Log(numForest +" "+ numLand+" "+ numWater+" "+ numDesert);
         while (numWater + numForest + numLand + numDesert < maxTiles)
         {
             numWater += 1;

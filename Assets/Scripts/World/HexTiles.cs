@@ -23,17 +23,35 @@ public class HexTile : MonoBehaviour
         return h;
     }
     public override string ToString() => "workwork";
+    // carbon sink negative
+    // Carbon producer
     virtual public float GetC02Polution() {
+        // get pollution of buildings
+        // get carbon sink of free space
+        float co2 = 0;
+        foreach (Building building in buildings)
+        {
+            co2 += building.GetC02Polution();
+        }
+        co2 -= GetCarbonSink(); 
+        return co2;
+    }
+    virtual public float GetCarbonSink()
+    {
         return 0.0f;
     }
-
     virtual public float GetNuclearWaste()
     {
         return 0.0f;
     }
     virtual public float GetPower()
     {
-        return 0.0f;
+        float power = 0;
+        foreach (Building building in buildings)
+        {
+            power += building.GetPower();
+        }
+        return power;
     }
     virtual public float GetWellness()
     {
@@ -127,8 +145,9 @@ public static void SetTile(GameObject tile)
                 tile.GetComponent<Renderer>().material = TileManager.Get().NotAllowedMat;
                 return "No estan los recursos para poner este edificio aqui";
             }
+            // Debug.Log("selectedBuildButton.TriggerEnter" + selectedBuildButton.nextTile);
 
-            AddBuilding(b);
+            AddBuilding(b, buildings.Count);
             // Debug.Log("selectedBuildButton.TriggerEnter" + selectedBuildButton.nextTile);
             // selectedBuildButton.nextTile.AddTileLocal(tile);
         }
@@ -137,7 +156,13 @@ public static void SetTile(GameObject tile)
     public void AddBuilding(Building b)
     {
         GameObject tile = gameObject;
-        b.AddBuilding(tile);
+        b.AddBuilding(tile,-1);
+        PlaceBuild(b);
+    }
+    public void AddBuilding(Building b, float i)
+    {
+        GameObject tile = gameObject;
+        b.AddBuilding(tile,i);
         PlaceBuild(b);
     }
     void PlaceBuild(Building b)
@@ -167,6 +192,10 @@ public class WaterHexTile : HexTile
         tile.AddComponent<WaterHexTile>();
         tile.GetComponent<Renderer>().material = TileManager.Get().waterMat;
     }
+    override public float GetCarbonSink()
+    {
+        return 0.0f;
+    }
 }
 public class ForestHexTile : HexTile
 {
@@ -178,6 +207,10 @@ public class ForestHexTile : HexTile
     {
         tile.AddComponent<ForestHexTile>();
         tile.GetComponent<Renderer>().material = TileManager.Get().forestMat;
+    }
+    override public float GetCarbonSink()
+    {
+        return 10.0f;
     }
 }
 public class LandHexTile : HexTile
@@ -191,6 +224,10 @@ public class LandHexTile : HexTile
         tile.AddComponent<LandHexTile>();
         tile.GetComponent<Renderer>().material = TileManager.Get().landMat;
     }
+    override public float GetCarbonSink()
+    {
+        return 3.0f;
+    }
 }
 public class DesertHexTile : HexTile
 {
@@ -202,6 +239,10 @@ public class DesertHexTile : HexTile
     {
         tile.AddComponent<DesertHexTile>();
         tile.GetComponent<Renderer>().material = TileManager.Get().desertMat;
+    }
+    override public float GetCarbonSink()
+    {
+        return 0.0f;
     }
 }
 

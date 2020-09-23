@@ -32,13 +32,14 @@ public class HandController : MonoBehaviour
         // BuildButton selectedBuildButton = BuildManager.Get().selectedBuildButton; // other.gameObject.GetComponent<BuildButton>();
         BuildButton selectedBuildButton = other.gameObject.GetComponent<BuildButton>();
         // Debug.Log("BuildBtn " + selectedBuildButton);
+        WorldRotatorButton selectedRotatorButton = other.gameObject.GetComponent<WorldRotatorButton>();
         if (hexTile != null)
         {
             Debug.Log("Coll world " + BuildManager.Get().GetSelectedBuilding());
             hexTile.TriggerEnter(BuildManager.Get().GetSelectedBuilding());
             // hexTile.TriggerEnter(other.gameObject, BuildManager.Get().GetSelectedBuilding());
         }
-        else if(selectedBuildButton != null)
+        else if (selectedBuildButton != null)
         {
             selectedBuildButton.SetSelected(true);
             Debug.Log("Coll board " + selectedBuildButton);
@@ -57,21 +58,34 @@ public class HandController : MonoBehaviour
             }*/
             // show it in the hand
         }
+        else if (selectedRotatorButton != null) { }
         else
         {
             Debug.Log("Coll Qui! ");
 
-           Application.Quit();
+            Application.Quit();
         }
     }
-    
+    public void OnTriggerStay(Collider other)
+    {
+        WorldRotatorButton selectedRotatorButton = other.gameObject.GetComponent<WorldRotatorButton>();
+        if (selectedRotatorButton != null)
+        {
+            selectedRotatorButton.Rotate();
+
+        }
+    }
+
+
     public void OnTriggerExit(Collider other)
     {
         Debug.Log("Coll exit trigger" + other.gameObject.name);
 
         if (other.gameObject.GetComponent<HexTile>() != null)
               other.gameObject.GetComponent<HexTile>().TriggerExit(other.gameObject);
-       // other.gameObject.GetComponent<Renderer>().material = world.waterMat;
+        if (other.gameObject.GetComponent<WorldRotatorButton>() != null)
+            other.gameObject.GetComponent<WorldRotatorButton>().TriggerExit();
+        // other.gameObject.GetComponent<Renderer>().material = world.waterMat;
 
     }
     /*
